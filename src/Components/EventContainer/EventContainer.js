@@ -1,13 +1,43 @@
 import React from 'react';
 
-import {Div} from '@vkontakte/vkui';
+import {Div, Header, Link, HorizontalScroll} from '@vkontakte/vkui';
 
-import styles from './EventContainer.css'
+import TinyEvent from './TinyEvent/TinyEvent';
+
+import styles from './EventContainer.css';
+
+const itemStyle = {
+    flexShrink: 0,
+    display: 'flex',
+    flexDirection:
+    'column',
+    alignItems: 'center',
+    fontSize: 12
+  };
 
 const eventContainer = (props) => {
   return (
     <Div className={styles.EventContainer}>
-        <h3>{props.title}</h3>
+        <Header 
+            aside={<Link>Показать все</Link>}>
+            {props.title}
+        </Header>
+        <HorizontalScroll>
+          <div className={styles.EventsWrapper}>
+            <div className={styles.SingleEventWrapper}>
+                <TinyEvent />
+            </div>
+            <div className={styles.SingleEventWrapper}>
+                <TinyEvent />
+            </div>
+            <div className={styles.SingleEventWrapper}>
+                <TinyEvent />
+            </div>
+            <div className={styles.SingleEventWrapper}>
+                <TinyEvent />
+            </div>
+          </div>
+        </HorizontalScroll>
     </Div>
   );
 }

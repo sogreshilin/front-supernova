@@ -66,25 +66,11 @@ class App extends React.Component {
                     >
                         <Icon28Newsfeed/>
                     </TabbarItem>
-                    <TabbarItem
-                        onClick={this.onStoryChange}
-                        selected={this.state.activeStory === 'discover'}
-                        data-story="discover"
-                        text="Поиск"
-                    >
-                        <Icon28Search/>
-                    </TabbarItem>
                 </Tabbar>
             }>
                 <View id='main' activePanel={this.state.activePanel}>
                     <Home id="main" fetchedUser={this.state.fetchedUser} go={this.go}/>
                     <Persik id="persik" go={this.go}/>
-                </View>
-                <View id="discover" activePanel="discover">
-                    <Panel id="discover">
-                        <PanelHeader>Discover</PanelHeader>
-                        <h1>Hello world</h1>
-                    </Panel>
                 </View>
                 <View id={pages.MY_EVENTS} activePanel="check">
                     <CustomEvents id="check" go={this.go} />

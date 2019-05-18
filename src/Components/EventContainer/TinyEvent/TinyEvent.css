@@ -1,0 +1,23 @@
+.TinyEvent {
+    width: 100px;
+    /* background-color: red; */
+}
+
+.TinyEvent img {
+    width: 100%;
+    height: auto;
+    background-color: red;
+    border-radius: 8px;
+}
+
+.TinyEvent div {
+    color: var(--text_primary);
+    font-weight: 400;
+    font-size: 0.8rem;
+}
+
+.TinyEvent span {
+    color: var(--text_subhead);
+    font-weight: 400;
+    font-size: 0.8rem;
+}

@@ -1,13 +1,14 @@
 import React from 'react';
 import connect from '@vkontakte/vkui-connect';
-import {View, Epic, Tabbar, TabbarItem, Panel, PanelHeader} from '@vkontakte/vkui';
+import {View, Epic, Tabbar, TabbarItem, Panel, PanelHeader, Input} from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 import Icon28Newsfeed from '@vkontakte/icons/dist/28/newsfeed';
-import Icon28Search from '@vkontakte/icons/dist/28/search';
+import Icon28AddOutline from '@vkontakte/icons/dist/28/add_outline';
 
 import Home from './panels/Home';
 import Persik from './panels/Persik';
-
+import CreateEvent from "./Pages/CreateEvent/CreateEvent";
+import {Pages} from "./Pages/model";
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -37,6 +38,7 @@ class App extends React.Component {
     };
 
     onStoryChange = (e) => {
+        console.log(e.currentTarget.dataset.story);
         this.setState({activeStory: e.currentTarget.dataset.story})
     };
 
@@ -54,11 +56,11 @@ class App extends React.Component {
                     </TabbarItem>
                     <TabbarItem
                         onClick={this.onStoryChange}
-                        selected={this.state.activeStory === 'discover'}
-                        data-story="discover"
-                        text="Поиск"
+                        selected={this.state.activeStory === Pages.CREATE_EVENT}
+                        data-story={Pages.CREATE_EVENT}
+                        text="Создать"
                     >
-                        <Icon28Search/>
+                        <Icon28AddOutline/>
                     </TabbarItem>
                 </Tabbar>
             }>
@@ -66,13 +68,10 @@ class App extends React.Component {
                     <Home id="main" fetchedUser={this.state.fetchedUser} go={this.go}/>
                     <Persik id="persik" go={this.go}/>
                 </View>
-                <View id="discover" activePanel="discover">
-                    <Panel id="discover">
-                        <PanelHeader>Discover</PanelHeader>
-                    </Panel>
+                <View id={Pages.CREATE_EVENT} activePanel={Pages.CREATE_EVENT}>
+                    <CreateEvent id={Pages.CREATE_EVENT} />
                 </View>
             </Epic>
-
         );
     }
 }

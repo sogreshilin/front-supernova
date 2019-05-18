@@ -5,13 +5,16 @@ import '@vkontakte/vkui/dist/vkui.css';
 import Icon28Newsfeed from '@vkontakte/icons/dist/28/newsfeed';
 import Icon28Search from '@vkontakte/icons/dist/28/search';
 import Icon24Reorder from '@vkontakte/icons/dist/24/reorder';
+import Icon24Newsfeed from '@vkontakte/icons/dist/24/newsfeed';
 
 import * as pages from './Utils/pageTypes';
 import * as myEventsPanels from './panels/MyEvents/panels';
 
 import Home from './panels/Home';
 import Persik from './panels/Persik';
+
 import CustomEvents from './Pages/MyEvents/CustomEvents';
+import Tinder from './Pages/Feed/Tinder';
 
 
 class App extends React.Component {
@@ -19,9 +22,9 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            activePanel: 'main',
+            activePanel: pages.FEED,
             fetchedUser: null,
-            activeStory: 'main'
+            activeStory: pages.FEED
         };
     }
 
@@ -52,11 +55,11 @@ class App extends React.Component {
                 <Tabbar>
                     <TabbarItem
                         onClick={this.onStoryChange}
-                        selected={this.state.activeStory === 'main'}
-                        data-story="main"
-                        text="Главная страница"
+                        selected={this.state.activeStory === pages.FEED}
+                        data-story={pages.FEED}
+                        text="Рекомендации"
                     >
-                        <Icon28Newsfeed/>
+                        <Icon24Newsfeed/>
                     </TabbarItem>
                     <TabbarItem
                         onClick={this.onStoryChange}
@@ -64,17 +67,17 @@ class App extends React.Component {
                         data-story={pages.MY_EVENTS}
                         text="Мои события"
                     >
-                        <Icon28Newsfeed/>
+                        <Icon24Newsfeed/>
                     </TabbarItem>
                 </Tabbar>
             }>
-                <View id='main' activePanel={this.state.activePanel}>
-                    <Home id="main" fetchedUser={this.state.fetchedUser} go={this.go}/>
-                    <Persik id="persik" go={this.go}/>
+                <View id={pages.FEED} activePanel="main">
+                    <Tinder id="main" go={this.go} />
                 </View>
                 <View id={pages.MY_EVENTS} activePanel="check">
                     <CustomEvents id="check" go={this.go} />
                 </View>
+                
             </Epic>
         );
     }

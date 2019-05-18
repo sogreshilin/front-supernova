@@ -5,9 +5,9 @@ import styles from './TinyEvent.css';
 const tinyEvent = (props) => {
     return (
         <div className={styles.TinyEvent}>
-            <img src='/assets/images/persik.png' alt=""/>
-            <div>Мое мероприятие</div>
-            <span>22.04.19</span>
+            <img src={props.imageSrc} alt=""/>
+            <div>{props.title}</div>
+            <span>{props.type}</span>
         </div>
     )
 }

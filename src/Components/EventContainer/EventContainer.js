@@ -6,40 +6,34 @@ import TinyEvent from './TinyEvent/TinyEvent';
 
 import styles from './EventContainer.css';
 
-const itemStyle = {
-    flexShrink: 0,
-    display: 'flex',
-    flexDirection:
-    'column',
-    alignItems: 'center',
-    fontSize: 12
-  };
-
 const eventContainer = (props) => {
-  return (
-    <Div className={styles.EventContainer}>
-        <Header 
-            aside={<Link>Показать все</Link>}>
-            {props.title}
-        </Header>
-        <HorizontalScroll>
-          <div className={styles.EventsWrapper}>
+    let events = null;
+    if (props.events) {
+        events = props.events.map(event => (
             <div className={styles.SingleEventWrapper}>
-                <TinyEvent />
+                <TinyEvent 
+                    title={event.title}
+                    type={event.type}
+                    imageSrc={event.image}
+                />
             </div>
-            <div className={styles.SingleEventWrapper}>
-                <TinyEvent />
+        ));
+    }
+
+
+    return (
+        <Div className={styles.EventContainer}>
+            <Header 
+                aside={<Link>Показать все</Link>}>
+                {props.title}
+            </Header>
+            <HorizontalScroll>
+            <div className={styles.EventsWrapper}>
+                {events}
             </div>
-            <div className={styles.SingleEventWrapper}>
-                <TinyEvent />
-            </div>
-            <div className={styles.SingleEventWrapper}>
-                <TinyEvent />
-            </div>
-          </div>
-        </HorizontalScroll>
-    </Div>
-  );
+            </HorizontalScroll>
+        </Div>
+    );
 }
 
 export default eventContainer;

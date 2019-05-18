@@ -1,0 +1,28 @@
+import EventType from 'src/Store/EventType';
+
+export default {
+    [EventType.ARTS]: 'Искусство',
+    [EventType.BELIEFS]: 'Вера и религия',
+    [EventType.BOOK_CLUBS]: 'Книжный клуб',
+    [EventType.CAREER_BUSINESS]: 'Карьера и бизнес',
+    [EventType.DANCE]: 'Танцы',
+    [EventType.FAMILY]: 'Семья',
+    [EventType.FASHION_AND_BEAUTY]: 'Мода и красота',
+    [EventType.FILM]: 'Фильмы',
+    [EventType.FOOD_AND_DRINK]: 'Еда и напитки',
+    [EventType.HEALTH_AND_WELLNESS]: 'Здоровье',
+    [EventType.HOBBIES_AND_CRAFTS]: 'Хобби и ремесло',
+    [EventType.LGBTQ]: 'ЛГБТК',
+    [EventType.LANGUAGE_AND_CULTURE]: 'Язык и культура',
+    [EventType.LEARNING]: 'Обучение',
+    [EventType.MUSIC]: 'Музыка',
+    [EventType.OUTDOORS_AND_ADVENTURE]: 'Активный отдых',
+    [EventType.PETS]: 'Домашние животные',
+    [EventType.PROGRAMMING]: 'Программирование',
+    [EventType.PHOTOGRAPHY]: 'Фотография',
+    [EventType.SCI_FI_AND_GAMES]: 'Научная фантастика и игры',
+    [EventType.SOCIAL]: 'Искусство',
+    [EventType.SPORTS_AND_FITNESS]: 'Спорт и фитнес',
+    [EventType.TECH]: 'Технологии',
+    [EventType.WRITING]: 'Искусство письма',
+}

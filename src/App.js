@@ -4,9 +4,15 @@ import {View, Epic, Tabbar, TabbarItem, Panel, PanelHeader} from '@vkontakte/vku
 import '@vkontakte/vkui/dist/vkui.css';
 import Icon28Newsfeed from '@vkontakte/icons/dist/28/newsfeed';
 import Icon28Search from '@vkontakte/icons/dist/28/search';
+import Icon24Reorder from '@vkontakte/icons/dist/24/reorder';
+
+import * as pages from './Utils/pageTypes';
+import * as myEventsPanels from './panels/MyEvents/panels';
 
 import Home from './panels/Home';
 import Persik from './panels/Persik';
+import CustomEvents from './Pages/MyEvents/CustomEvents';
+
 
 class App extends React.Component {
     constructor(props) {
@@ -48,7 +54,15 @@ class App extends React.Component {
                         onClick={this.onStoryChange}
                         selected={this.state.activeStory === 'main'}
                         data-story="main"
-                        text="Главная"
+                        text="Главная страница"
+                    >
+                        <Icon28Newsfeed/>
+                    </TabbarItem>
+                    <TabbarItem
+                        onClick={this.onStoryChange}
+                        selected={this.state.activeStory === pages.MY_EVENTS}
+                        data-story={pages.MY_EVENTS}
+                        text="Мои события"
                     >
                         <Icon28Newsfeed/>
                     </TabbarItem>
@@ -69,10 +83,13 @@ class App extends React.Component {
                 <View id="discover" activePanel="discover">
                     <Panel id="discover">
                         <PanelHeader>Discover</PanelHeader>
+                        <h1>Hello world</h1>
                     </Panel>
                 </View>
+                <View id={pages.MY_EVENTS} activePanel="check">
+                    <CustomEvents id="check" go={this.go} />
+                </View>
             </Epic>
-
         );
     }
 }

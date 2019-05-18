@@ -15,8 +15,4 @@ connect.send('VKWebAppInit', {});
 // Подробнее про сервис воркеры можно почитать тут — https://vk.cc/8MHpmT
 // registerServiceWorker();
 
-// const App = () => (
-    {/*<div>hello</div>*/}
-// );
-
 ReactDOM.render(<App />, document.getElementById('app'));

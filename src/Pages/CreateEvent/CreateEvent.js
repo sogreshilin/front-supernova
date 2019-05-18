@@ -9,15 +9,17 @@ import {
     Textarea,
     Button,
     Div,
-    CellButton,
     File,
 } from "@vkontakte/vkui";
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 
 import styles from './styles.scss';
 
-import dictionary from 'src/Services/CreateEvent/Dictionary';
-
+import CreateEventDict from 'src/Services/Dictionary/CreateEvent';
+import EventTypeDict from 'src/Services/Dictionary/EventType';
+import FileApi from 'src/Services/File/api';
+import GeoApi from 'src/Services/Geo/api';
+import EventApi from 'src/Services/Event/api';
 
 const InputStatus = {
     Error: 'error',
@@ -25,42 +27,20 @@ const InputStatus = {
     Default: 'default',
 };
 
+
 export default class CreateEvent extends React.Component {
 
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            title: {
-                value: '',
-                isValid: null,
-            },
-            description: {
-                value: '',
-            },
-            category: {
-                value: '',
-            },
-            place: {
-                value: '',
-            },
-            date: {
-                isValid: null,
-                value: '',
-            },
-            time: {
-                isValid: null,
-                value: '',
-            },
-            image: null,
-        };
+        this.state = this.getInitialState();
     }
 
     render() {
         const {date, time, title, description} = this.state;
 
-        const dateMessage = date.isValid !== null ? 'Дата должна соответствовать формату ' + dictionary.date.hint : null;
+        const dateMessage = date.isValid !== null ? 'Дата должна соответствовать формату ' + CreateEventDict.date.hint : null;
         let dateValidationStatus = InputStatus.Default;
         if (date.isValid === true) {
             dateValidationStatus = InputStatus.Valid;
@@ -68,7 +48,7 @@ export default class CreateEvent extends React.Component {
             dateValidationStatus = InputStatus.Error;
         }
 
-        const timeMessage = time.isValid !== null ? 'Время должно соответствовать формату ' + dictionary.time.hint : null;
+        const timeMessage = time.isValid !== null ? 'Время должно соответствовать формату ' + CreateEventDict.time.hint : null;
         let timeValidationStatus = InputStatus.Default;
         if (time.isValid === true) {
             timeValidationStatus = InputStatus.Valid;
@@ -76,7 +56,7 @@ export default class CreateEvent extends React.Component {
             timeValidationStatus = InputStatus.Error;
         }
 
-        const titleMessage = time.isValid !== null ? 'Заголовок должен иметь длину от 10 до 50 символов' : null;
+        const titleMessage = title.isValid !== null ? 'Заголовок должен иметь длину от 10 до 50 символов' : null;
         let titleValidationStatus = InputStatus.Default;
         if (title.isValid === true) {
             titleValidationStatus = InputStatus.Valid;
@@ -84,7 +64,7 @@ export default class CreateEvent extends React.Component {
             titleValidationStatus = InputStatus.Error;
         }
 
-        const descriptionMessage = time.isValid !== null ? 'Описание должно иметь длину от 10 до 200 символов' : null;
+        const descriptionMessage = title.isValid !== null ? 'Описание должно иметь длину от 10 до 200 символов' : null;
         let descriptionValidationStatus = InputStatus.Default;
         if (description.isValid === true) {
             descriptionValidationStatus = InputStatus.Valid;
@@ -94,61 +74,81 @@ export default class CreateEvent extends React.Component {
 
         return (
             <Panel id={this.props.id}>
-                <PanelHeader>{dictionary.tabTitle}</PanelHeader>
+                <PanelHeader>{CreateEventDict.tabTitle}</PanelHeader>
                 <FormLayout className={styles.form}>
                     <FormLayoutGroup
-                        top={dictionary.eventTitle.label}
+                        top={CreateEventDict.eventTitle.label}
                         status={titleValidationStatus}
                         bottom={titleMessage}
                     >
                         <Input
                             type={'text'}
-                            placeholder={dictionary.eventTitle.hint}
+                            placeholder={CreateEventDict.eventTitle.hint}
                             onChange={this.onTitleChanged}
                             value={this.state.title.value}
                             status={titleValidationStatus}
                         />
                     </FormLayoutGroup>
                     <Textarea
-                        top={dictionary.description.label}
-                        placeholder={dictionary.description.hint}
+                        top={CreateEventDict.description.label}
+                        placeholder={CreateEventDict.description.hint}
                         onChange={this.onDescriptionChanged}
                         value={this.state.description.value}
                         status={descriptionValidationStatus}
                         bottom={descriptionMessage}
                     />
-                    <FormLayoutGroup top={dictionary.category.label}>
+                    <FormLayoutGroup top={CreateEventDict.category.label}>
                         <Select
-                            placeholder={dictionary.category.hint}
+                            placeholder={CreateEventDict.category.hint}
                             onChange={this.onCategoryChanged}
                             value={this.state.category.value}
                         >
-                            <option value='b'>Option1</option>
-                            <option value='c'>Option2</option>
+                            {
+                                Object.keys(EventTypeDict).map(key =>
+                                    <option key={key} value={key}>{EventTypeDict[key]}</option>
+                                )
+                            }
                         </Select>
                     </FormLayoutGroup>
-                    <FormLayoutGroup top={dictionary.place.label}>
-                        <Input type={'text'} placeholder={dictionary.place.hint}/>
+                    <FormLayoutGroup
+                        top={CreateEventDict.place.label}
+                        bottom={this.state.place.message}
+                        status={this.state.place.message !== null ? InputStatus.Error : InputStatus.Default}
+                    >
+                        <Input
+                            type={'text'}
+                            placeholder={CreateEventDict.place.hint}
+                            onChange={this.onPlaceChanged}
+                            value={this.state.place.value}
+                        />
+                        {
+                            this.state.place.options &&
+                            <Select onChange={this.onAddressOptionSelected}>
+                                {this.state.place.options.map((sug, index) =>
+                                    <option key={index} value={index}>{sug.value}</option>
+                                )}
+                            </Select>
+                        }
                     </FormLayoutGroup>
                     <FormLayoutGroup
-                        top={dictionary.date.label}
+                        top={CreateEventDict.date.label}
                         status={dateValidationStatus}
                         bottom={dateMessage}
                     >
                         <Input type={'date'}
-                               placeholder={dictionary.date.hint}
+                               placeholder={CreateEventDict.date.hint}
                                onChange={this.onDateChanged}
                                value={date.value}
                                status={dateValidationStatus}
                         />
                     </FormLayoutGroup>
                     <FormLayoutGroup
-                        top={dictionary.time.label}
+                        top={CreateEventDict.time.label}
                         status={timeValidationStatus}
                         bottom={timeMessage}
                     >
                         <Input type={'time'}
-                               placeholder={dictionary.time.hint}
+                               placeholder={CreateEventDict.time.hint}
                                onChange={this.onTimeChanged}
                                value={time.value}
                                status={timeValidationStatus}
@@ -159,7 +159,6 @@ export default class CreateEvent extends React.Component {
                     >
                         <div>
                             <File
-                                // top="Изображение мероприятия"
                                 before={<Icon24Camera/>}
                                 size="l"
                                 accept={'.png, .jpg, .jpeg'}
@@ -183,12 +182,51 @@ export default class CreateEvent extends React.Component {
                         size={'xl'}
                         stretched
                         onClick={this.onFinishClicked}
-                    >{dictionary.actions.finish}
+                    >{CreateEventDict.actions.finish}
                     </Button>
                 </Div>
             </Panel>
         );
     }
+
+    onAddressOptionSelected = (e) => {
+        const optionIndex = Number.parseInt(e.target.value, 10);
+        const address = this.state.place.options[optionIndex].value;
+        this.setState({
+                placeTimestamp: Date.now(),
+                place: {
+                    value: address,
+                    options: this.state.place.options,
+                    message: this.state.place.message,
+                }
+            },
+            () => this.addressSuggestions(address));
+    };
+
+    onPlaceChanged = (e) => {
+        const address = e.target.value.trim();
+        if (address.length > 5 && (!this.state.placeTimestamp || Date.now() - this.state.placeTimestamp > 1000)) {
+            console.log(address);
+            this.setState({
+                    placeTimestamp: Date.now(),
+                    place: {
+                        value: e.target.value,
+                        options: this.state.place.options,
+                        message: this.state.place.message,
+                    }
+                },
+                () => this.addressSuggestions(address)
+            );
+        } else {
+            this.setState({
+                place: {
+                    value: e.target.value,
+                    options: this.state.place.options,
+                    message: this.state.place.message,
+                }
+            });
+        }
+    };
 
     onAddFile = (e) => {
         const files = e.target.files;
@@ -198,6 +236,80 @@ export default class CreateEvent extends React.Component {
             })
         }
     };
+
+    addressSuggestions = (address) =>
+        GeoApi
+            .suggestions(address)
+            .then(({data}) => {
+                const suggestions = data.suggestions;
+                console.log(suggestions);
+                if (suggestions.length === 0) {
+                    console.log('no options');
+                    return new Promise((_, reject) => {
+                        this.setState({
+                                place: {
+                                    value: this.state.place.value,
+                                    message: 'Введенный адрес не существует',
+                                    options: null
+                                }
+                            },
+                            () => reject(null)
+                        );
+                    });
+                } else if (suggestions.length > 1) {
+                    console.log('many options');
+                    if (suggestions[0].data.geo_lat) {
+                        return new Promise((resolve, _) => {
+                            this.setState(
+                                {
+                                    place: {
+                                        value: this.state.place.value,
+                                        message: null,
+                                        options: null,
+                                    }
+                                },
+                                () => resolve(suggestions[0])
+                            )
+                        });
+                    } else {
+                        return new Promise((_, reject) => {
+                            this.setState(
+                                {
+                                    place: {
+                                        value: this.state.place.value,
+                                        message: 'Укажите точный адрес',
+                                        options: suggestions
+                                    }
+                                },
+                                () => reject(null)
+                            )
+                        });
+                    }
+                } else {
+                    console.log('single option');
+                    return new Promise((resolve, _) => {
+                        this.setState(
+                            {
+                                place: {
+                                    value: this.state.place.value,
+                                    message: null,
+                                    options: null,
+                                }
+                            },
+                            () => resolve(suggestions[0])
+                        )
+                    });
+                }
+            });
+
+    uploadFile = () =>
+        FileApi
+            .upload(this.state.file)
+            .then(response => {
+                if (response.data) {
+                    return response.data.id;
+                }
+            });
 
     onFinishClicked = (e) => {
         const {date, time, title, description, category} = this.state;
@@ -226,12 +338,83 @@ export default class CreateEvent extends React.Component {
                     isValid: description.isValid === true,
                 },
             })
+        } else {
+            this
+                .addressSuggestions(this.state.place.value)
+                .then(suggestion =>
+                    this.uploadFile().then(fileId => ({
+                        fileId: fileId,
+                        suggestion: suggestion,
+                    }))
+                )
+                .then(({fileId, suggestion}) => {
+
+                    const location = suggestion.data;
+                    const address = location.street_with_type + ", " + location.house;
+                    const formattedDate = (date.value.includes('-') ? date.value : date.value.split('.').reverse().join('-')) + 'T' + time.value + ':00Z';
+                    const event = {
+                        authorId: 1,
+                        title: title.value,
+                        description: description.value,
+                        types: ['ARTS' /*category.value*/],
+                        location: {
+                            latitude: location.geo_lat,
+                            longitude: location.geo_lat,
+                            address: address,
+                            city: location.city,
+                        },
+                        interval: {
+                            from: formattedDate,
+                            to: formattedDate,
+                        },
+                        imageIds: [fileId],
+                    };
+                    console.log(event);
+
+                    return EventApi
+                        .createEvent(event)
+                        .then(_ => this.clearEventForm());
+                })
+                .catch(e => console.error(e));
         }
+    };
+
+    getInitialState = () => {
+        return {
+            title: {
+                value: '',
+                isValid: null,
+            },
+            description: {
+                value: '',
+            },
+            category: {
+                value: '',
+            },
+            place: {
+                value: '',
+                message: null,
+                options: null,
+            },
+            date: {
+                isValid: null,
+                value: '',
+            },
+            time: {
+                isValid: null,
+                value: '',
+            },
+            image: null,
+        };
+    };
+
+    clearEventForm = () => {
+        this.setState(this.getInitialState());
     };
 
     onTitleChanged = (e) => {
         const value = e.target.value;
-        const length = value.time().length();
+        const length = value.trim().length;
         this.setState({
             title: {
                 value: value,
@@ -242,7 +425,7 @@ export default class CreateEvent extends React.Component {
 
     onDescriptionChanged = (e) => {
         const value = e.target.value;
-        const length = value.time().length();
+        const length = value.trim().length;
         this.setState({
             description: {
                 value: value,

@@ -6,6 +6,7 @@ const initialState = Immutable({
     vk: null,
     isLogging: true,
     isRegistering: false,
+    finishedOnboarding: true,
 });
 
 export default (state = initialState, action) => {
@@ -18,6 +19,7 @@ export default (state = initialState, action) => {
             return state.merge({
                 isLogging: false,
                 user: action.internalUser,
+                finishedOnboarding: false,
             });
         case types.LOGIN:
             return state.merge({
@@ -28,6 +30,11 @@ export default (state = initialState, action) => {
             return state.merge({
                 isLogging: false,
                 user: action.internalUser,
+            });
+        case 'FINISH_ONBOARDING':
+            return state.merge({
+                isLogging: false,
+                finishedOnboarding: true,
             });
         default:
             return state;

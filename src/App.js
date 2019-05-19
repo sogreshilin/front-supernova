@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect as reduxConnect} from 'react-redux';
 import connect from '@vkontakte/vkui-connect';
-import {View, Epic, Tabbar, TabbarItem, Panel, PanelHeader, Input} from '@vkontakte/vkui';
+import {View, Epic, Tabbar, TabbarItem, Panel, PanelHeader, Input, ScreenSpinner} from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 import Icon24Newsfeed from '@vkontakte/icons/dist/24/newsfeed';
 
@@ -51,6 +51,9 @@ class App extends React.Component {
     };
 
     render() {
+        const {isLoading, isRegistering, finishedOnboarding} = this.props.profile;
+
+
         return (
             <Epic activeStory={this.state.activeStory} tabbar={
                 <Tabbar>
@@ -81,14 +84,19 @@ class App extends React.Component {
                 </Tabbar>
             }>
                 <View id={pages.FEED}
-                      activePanel={this.props.profile.isLogging || this.props.profile.isRegistering ? Pages.PROFILE : pages.FEED}
+                      activePanel={
+                          isLoading || isRegistering ? Pages.PROFILE : (finishedOnboarding ? pages.FEED : Pages.ONBOARDING)}
                 >
-                    <Onboarding id={Pages.PROFILE} user={this.props.profile.user}/>
+                    <Panel id={Pages.PROFILE}>
+                        <ScreenSpinner />
+                    </Panel>
+                    <Onboarding id={Pages.ONBOARDING}/>
                     <Tinder id={pages.FEED} go={this.go}/>
                 </View>
                 <View id={pages.MY_EVENTS} activePanel="check">
-                    <CustomEvents id="check" go={this.go}
-                    userId={this.props.profile.user.id}/>
+                    <Tinder id={pages.FEED} go={this.go}/>
+                    {/*<CustomEvents id="check" go={this.go}*/}
+                    {/*userId={this.props.profile.user.id}/>*/}
                 </View>
                 <View id={Pages.CREATE_EVENT} activePanel={Pages.CREATE_EVENT}>
                     <CreateEvent id={Pages.CREATE_EVENT} user={this.props.profile.user}/>

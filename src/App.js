@@ -27,6 +27,7 @@ class App extends React.Component {
         super(props);
 
         this.state = {
+            userId: 1,
             activePanel: pages.FEED,
             fetchedUser: null,
             activeStory: pages.FEED
@@ -89,7 +90,8 @@ class App extends React.Component {
                     <Tinder id="main" go={this.go}/>
                 </View>
                 <View id={pages.MY_EVENTS} activePanel="check">
-                    <CustomEvents id="check" go={this.go}/>
+                    <CustomEvents id="check" go={this.go}
+                    userId={this.state.userId}/>
                 </View>
                 <View id={Pages.CREATE_EVENT} activePanel={Pages.CREATE_EVENT}>
                     <CreateEvent id={Pages.CREATE_EVENT}/>

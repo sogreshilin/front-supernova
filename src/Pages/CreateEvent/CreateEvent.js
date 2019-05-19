@@ -233,7 +233,8 @@ export default class CreateEvent extends React.Component {
         if (files && files.length > 0) {
             this.setState({
                 file: files[0]
-            })
+            });
+            console.log(files[0]);
         }
     };
 
@@ -373,7 +374,10 @@ export default class CreateEvent extends React.Component {
 
                     return EventApi
                         .createEvent(event)
-                        .then(_ => this.clearEventForm());
+                        .then(_ => {
+                            console.log(_,'<-----');
+                            this.clearEventForm()
+                        });
                 })
                 .catch(e => console.error(e));
         }

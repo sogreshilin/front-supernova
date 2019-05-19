@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+import request from '../../Utils/request';
 
 import {Panel, PanelHeader, Footer, platform} from '@vkontakte/vkui';
 
@@ -12,26 +12,51 @@ export default class CustomEvents extends Component {
 
     state = {
         favoriteEvents: null,
-        likedEvents: null,
+        createdEvents: null,
     }
 
+
     componentDidMount = () => {
-        const favoriteEvents = [{
-            title: 'Custom event',
-            type: 'Развлечения',
-            image: '/assets/images/persik.png'
-        }];
+        const eventsToSend = [];
+        request.get(`/api/persons/${this.props.userId}`)
+            .then(resp => {
+                const createdEvents = resp.data.createdEvents;
+                const favouriteEvents = resp.data.favouriteEvents;
 
-        const likedEvents = [{
-            title: 'Custom event',
-            type: 'Развлечения',
-            image: '/assets/images/persik.png'
-        }];
+                const updatedCreatedEvents = createdEvents.map(createdEvent => {
+                    const title = createdEvent.title;
+                    const type = createdEvent.types[0];
+                    const imgId = createdEvent.images[0].id;
 
-        this.setState({
-            favoriteEvents,
-            likedEvents
-        });
+                    return {
+                        title,
+                        type,
+                        imgId,
+                    }
+                });
+
+                const updatedFavouritesEvents = favouriteEvents.map(createdEvent => {
+                    const title = createdEvent.title;
+                    const type = createdEvent.types[0];
+                    const imgId = createdEvent.images[0].id;
+
+                    return {
+                        title,
+                        type,
+                        imgId,
+                    }
+                });
+
+                this.setState({
+                    createdEvents: updatedCreatedEvents,
+                    createdEvevnts:  updatedFavouritesEvents,
+                });
+
+                return new Promise((resolve,_ ) => resolve(updatedCreatedEvents));
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     render () {
@@ -45,7 +70,7 @@ export default class CustomEvents extends Component {
                     events = {this.state.favoriteEvents} />
                 <EventContainer
                     title='Созданные события' 
-                    events = {this.state.likedEvents}/>
+                    events = {this.state.createdEvents}/>
                 <Footer >Ваши мероприятия</Footer>
             </Panel>
         );

@@ -1,0 +1,9 @@
+.SummaryItem {
+    display: flex;
+    align-items: center;
+}
+
+.SummaryItem span {
+    margin-left: 5px;
+    color: #6F6F6F;
+}

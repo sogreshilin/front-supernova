@@ -1,0 +1,5 @@
+.ShiftControls {
+    background-color: var(--background_content);
+    display: flex;
+    justify-content: space-evenly;
+}

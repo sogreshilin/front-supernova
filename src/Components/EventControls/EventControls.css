@@ -1,0 +1,8 @@
+.EventControls {
+    background-color: var(--background_content);
+}
+
+.EventControlsContainer {
+    display: flex;
+    justify-content: space-between;
+}

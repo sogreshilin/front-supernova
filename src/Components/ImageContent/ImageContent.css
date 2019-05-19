@@ -1,0 +1,12 @@
+.ImageContent {
+    background-color: var(--background_content);
+    overflow: hidden;
+
+    margin-bottom: 16px;
+}
+
+.ImageContent img {
+    width: 100%;
+    height: 200px;
+    background-color: red;
+}

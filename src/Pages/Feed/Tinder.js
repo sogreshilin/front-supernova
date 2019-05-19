@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {Panel, PanelHeader, Footer, platform} from '@vkontakte/vkui';
 
-import Categories from '../../Components/Categories/Categories'
+import ImageContent from '../../Components/ImageContent/ImageContent';
+import EventSummary from '../../Components/EventSummary/EventSummary';
 
 export default class Tinder extends Component {
     state = {
@@ -15,8 +16,14 @@ export default class Tinder extends Component {
                 <PanelHeader>
                     Рекомендованные события
                 </PanelHeader>
-                <Categories categories={this.state.categories} />
-                <h1>Рекомендованные события</h1>
+                <ImageContent 
+                    imageSrc='/assets/images/persik.png'/>
+                <EventSummary 
+                    title='Title'
+                    description='lhwflwfeowefowehfowe'
+                    categories={this.state.categories}
+                    check='cheeeck'
+                />
             </Panel>
         );
     }

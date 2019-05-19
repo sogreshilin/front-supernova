@@ -8,7 +8,9 @@ const categories = (props) => {
     
     if (props.categories) {
         types = props.categories.map(type => (
-            <div className={styles.SingleCategoryWrapper}>
+            <div 
+                className={styles.SingleCategoryWrapper}
+                key={type}>
                 <Button size="m" level="secondary">{type}</Button>
             </div>
         ));

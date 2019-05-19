@@ -1,0 +1,10 @@
+.LikesControls {
+    display: flex;
+}
+
+.LikesControl {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    margin: 0 5px;
+}

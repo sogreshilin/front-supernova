@@ -1,0 +1,7 @@
+.EventSummary {
+    background-color: var(--background_content);
+}
+
+.EventSummary p {
+    color: var(--control_tint_muted);
+}

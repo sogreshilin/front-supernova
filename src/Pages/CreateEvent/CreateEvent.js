@@ -38,7 +38,7 @@ export default class CreateEvent extends React.Component {
     }
 
     render() {
-        const {date, time, title, description} = this.state;
+        const {date, time, title, description, file} = this.state;
 
         const dateMessage = date.isValid !== null ? 'Дата должна соответствовать формату ' + CreateEventDict.date.hint : null;
         let dateValidationStatus = InputStatus.Default;
@@ -70,6 +70,14 @@ export default class CreateEvent extends React.Component {
             descriptionValidationStatus = InputStatus.Valid;
         } else if (description.isValid === false) {
             descriptionValidationStatus = InputStatus.Error;
+        }
+
+        const fileMessage = title.isValid !== null ? 'Изображение обязательно для мероприятия' : null;
+        let fileValidationStatus = InputStatus.Default;
+        if (file.isValid === true) {
+            fileValidationStatus = InputStatus.Valid;
+        } else if (file.isValid === false) {
+            fileValidationStatus = InputStatus.Error;
         }
 
         return (
@@ -156,6 +164,8 @@ export default class CreateEvent extends React.Component {
                     </FormLayoutGroup>
                     <FormLayoutGroup
                         top="Изображение мероприятия"
+                        status={fileValidationStatus}
+                        bottom={fileMessage}
                     >
                         <div>
                             <File
@@ -167,8 +177,8 @@ export default class CreateEvent extends React.Component {
                                 Добавить
                             </File>
                             {
-                                this.state.file ? (
-                                    <p>{this.state.file.name}</p>
+                                this.state.file.value ? (
+                                    <p>{this.state.file.value.name}</p>
                                 ) : (
                                     <p>Файл не выбран</p>
                                 )
@@ -232,9 +242,11 @@ export default class CreateEvent extends React.Component {
         const files = e.target.files;
         if (files && files.length > 0) {
             this.setState({
-                file: files[0]
-            });
-            console.log(files[0]);
+                file: {
+                    value: files[0],
+                    isValid: true,
+                }
+            })
         }
     };
 
@@ -305,7 +317,7 @@ export default class CreateEvent extends React.Component {
 
     uploadFile = () =>
         FileApi
-            .upload(this.state.file)
+            .upload(this.state.file.value)
             .then(response => {
                 if (response.data) {
                     return response.data.id;
@@ -313,8 +325,14 @@ export default class CreateEvent extends React.Component {
             });
 
     onFinishClicked = (e) => {
-        const {date, time, title, description, category} = this.state;
-        const isValid = date.isValid && time.isValid && title.isValid && description.isValid && category.value !== '';
+        const {date, time, title, description, category, file} = this.state;
+        const isValid =
+            date.isValid &&
+            time.isValid &&
+            title.isValid &&
+            description.isValid &&
+            file.isValid &&
+            category.value !== '';
 
         if (!isValid) {
             this.setState({
@@ -331,12 +349,16 @@ export default class CreateEvent extends React.Component {
                     isValid: category.value !== '',
                 },
                 title: {
-                    value: category.value,
+                    value: title.value,
                     isValid: title.isValid === true,
                 },
                 description: {
-                    value: category.value,
+                    value: description.value,
                     isValid: description.isValid === true,
+                },
+                file: {
+                    value: file.value,
+                    isValid: file.isValid === true,
                 },
             })
         } else {
@@ -349,15 +371,15 @@ export default class CreateEvent extends React.Component {
                     }))
                 )
                 .then(({fileId, suggestion}) => {
-
+                    console.log(this.props.user.id);
                     const location = suggestion.data;
                     const address = location.street_with_type + ", " + location.house;
                     const formattedDate = (date.value.includes('-') ? date.value : date.value.split('.').reverse().join('-')) + 'T' + time.value + ':00Z';
                     const event = {
-                        authorId: 1,
+                        authorId: this.props.user.id,
                         title: title.value,
                         description: description.value,
-                        types: ['ARTS' /*category.value*/],
+                        types: [category.value],
                         location: {
                             latitude: location.geo_lat,
                             longitude: location.geo_lat,
@@ -408,7 +430,10 @@ export default class CreateEvent extends React.Component {
                 isValid: null,
                 value: '',
             },
-            image: null,
+            file: {
+                value: null,
+                isValid: null,
+            }
         };
     };
 

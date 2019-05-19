@@ -91,7 +91,7 @@ class App extends React.Component {
                         <ScreenSpinner />
                     </Panel>
                     <Onboarding id={Pages.ONBOARDING} user={this.props.profile.user}/>
-                    <Tinder id={pages.FEED} go={this.go}/>
+                    <Tinder id={pages.FEED} go={this.go} user={this.props.profile.user}/>
                 </View>
                 <View id={pages.MY_EVENTS} activePanel="check">
                     <Tinder id={pages.FEED} go={this.go}/>

@@ -14,6 +14,8 @@ export default class Tinder extends Component {
         ],
     }
     render() {
+        console.log(this.props.user);
+
         return (
             <Panel id={this.props.id}>
                 <PanelHeader>

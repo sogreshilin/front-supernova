@@ -51,8 +51,9 @@ class App extends React.Component {
     };
 
     render() {
-        const {isLoading, isRegistering, finishedOnboarding} = this.props.profile;
+        const {isLoading, isRegistering, finishedOnboarding, user} = this.props.profile;
 
+        console.log(this.props.profile);
 
         return (
             <Epic activeStory={this.state.activeStory} tabbar={
@@ -90,8 +91,8 @@ class App extends React.Component {
                     <Panel id={Pages.PROFILE}>
                         <ScreenSpinner />
                     </Panel>
-                    <Onboarding id={Pages.ONBOARDING} user={this.props.profile.user}/>
-                    <Tinder id={pages.FEED} go={this.go} user={this.props.profile.user}/>
+                    <Onboarding id={Pages.ONBOARDING} user={user}/>
+                    <Tinder id={pages.FEED} go={this.go} user={user}/>
                 </View>
                 <View id={pages.MY_EVENTS} activePanel="check">
                     <Tinder id={pages.FEED} go={this.go}/>

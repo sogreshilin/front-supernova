@@ -12,6 +12,8 @@ class Onboarding extends React.Component {
     constructor(props) {
         super(props);
 
+        console.log(this.props);
+
         const choice = {};
         Object.keys(EventType).map(key => {
             choice[key] = false

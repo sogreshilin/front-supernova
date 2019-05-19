@@ -1,33 +1,28 @@
 import React from 'react';
+import {connect as reduxConnect} from 'react-redux';
 import connect from '@vkontakte/vkui-connect';
 import {View, Epic, Tabbar, TabbarItem, Panel, PanelHeader, Input} from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
-import Icon28Newsfeed from '@vkontakte/icons/dist/28/newsfeed';
-
-import Icon28Search from '@vkontakte/icons/dist/28/search';
-import Icon24Reorder from '@vkontakte/icons/dist/24/reorder';
 import Icon24Newsfeed from '@vkontakte/icons/dist/24/newsfeed';
 
 import * as pages from './Utils/pageTypes';
-import * as myEventsPanels from './panels/MyEvents/panels';
 
 import CustomEvents from './Pages/MyEvents/CustomEvents';
 import Tinder from './Pages/Feed/Tinder';
 
+import {logIn} from 'src/Services/User/actions';
 
 import Icon28AddOutline from '@vkontakte/icons/dist/28/add_outline';
 
-import Home from './panels/Home';
-import Persik from './panels/Persik';
 import CreateEvent from "./Pages/CreateEvent/CreateEvent";
 import {Pages} from "./Pages/model";
+import Onboarding from "./Pages/Onboarding/Onboarding";
 
 class App extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            activePanel: pages.FEED,
             fetchedUser: null,
             activeStory: pages.FEED
         };
@@ -37,7 +32,7 @@ class App extends React.Component {
         connect.subscribe((e) => {
             switch (e.detail.type) {
                 case 'VKWebAppGetUserInfoResult':
-                    this.setState({fetchedUser: e.detail.data});
+                    this.props.dispatch(logIn(e.detail.data));
                     break;
                 default:
                     console.log(e.detail.type);
@@ -85,18 +80,21 @@ class App extends React.Component {
                     </TabbarItem>
                 </Tabbar>
             }>
-                <View id={pages.FEED} activePanel="main">
-                    <Tinder id="main" go={this.go}/>
+                <View id={pages.FEED}
+                      activePanel={this.props.profile.isLogging || this.props.profile.isRegistering ? Pages.PROFILE : pages.FEED}
+                >
+                    <Onboarding id={Pages.PROFILE} user={this.props.profile.user}/>
+                    <Tinder id={pages.FEED} go={this.go}/>
                 </View>
                 <View id={pages.MY_EVENTS} activePanel="check">
                     <CustomEvents id="check" go={this.go}/>
                 </View>
                 <View id={Pages.CREATE_EVENT} activePanel={Pages.CREATE_EVENT}>
-                    <CreateEvent id={Pages.CREATE_EVENT}/>
+                    <CreateEvent id={Pages.CREATE_EVENT} user={this.props.profile.user}/>
                 </View>
             </Epic>
         );
     }
 }
 
-export default App;
+export default reduxConnect(a => a)(App);

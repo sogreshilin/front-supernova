@@ -24,7 +24,7 @@ class Onboarding extends React.Component {
 
     onCardClick = (categoryId) => {
         request
-            .patch(`/api/persons/${this.props.userId}/favourites`, {
+            .patch(`/api/persons/${this.props.user.id}/favourites`, {
                 type: categoryId
             })
             .then(r => {
